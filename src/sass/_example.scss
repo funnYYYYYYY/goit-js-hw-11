@@ -26,3 +26,27 @@
   background-size: cover;
   background-position: center;
 }
+
+input {
+  padding: 10px;
+  color: red;
+}
+
+button {
+  padding: 10px;
+}
+
+#search-form {
+  display: block;
+  text-align: center;
+  padding: 30px;
+  background-color: teal;
+}
+
+.load-more {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
