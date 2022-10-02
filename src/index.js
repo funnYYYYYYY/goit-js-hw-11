@@ -33,35 +33,35 @@ function onClickLoadMore() {
   getPicture();
 }
 const getPicture = async () => {
-  // try {
-  const { data } = await axios.get(
-    `?q=${value}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${HITS_PER_PAGE}&page=${currentPage}&key=30191539-d56ffab2c88cb867d9bceaf74`
-  );
-  items = [...items, ...data.hits];
-  renderList(data.hits);
-  if (data.totalHits === 0) {
-    Notify.failure(
-      'Sorry, there are no images matching your search query. Please try again.'
+  try {
+    const { data } = await axios.get(
+      `?q=${value}&image_type=photo&orientation=horizontal&safesearch=true&per_page=${HITS_PER_PAGE}&page=${currentPage}&key=30191539-d56ffab2c88cb867d9bceaf74`
     );
-    return;
-  }
-  if (data.totalHits === data.totalHits.length - 1) {
-    Notify.failure(
-      "We're sorry, but you've reached the end of search results."
-    );
-    return;
-  }
-  refs.loadMore.classList.add('visible');
+    items = [...items, ...data.hits];
+    renderList(data.hits);
+    if (data.totalHits === 0) {
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+      return;
+    }
+    if (data.totalHits === data.totalHits.length - 1) {
+      Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+      return;
+    }
+    refs.loadMore.classList.add('visible');
 
-  totalPages = Math.ceil(totalHits / 40);
+    totalPages = Math.ceil(data.totalHits / 40);
 
-  if (currentPage >= totalPages) {
-    refs.loadMore.classList.remove('visible');
+    if (currentPage >= totalPages) {
+      refs.loadMore.classList.remove('visible');
+    }
+  } catch (error) {
+    Notify.failure(error);
   }
-  // } catch (error) {
-  Notify.failure(error);
 };
-// };
 
 const renderList = items => {
   const list = items
