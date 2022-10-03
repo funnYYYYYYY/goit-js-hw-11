@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-// import SimpleLightbox from 'simplelightbox';
-// import 'simplelightbox/dist/simple-lightbox.min.css';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 axios.defaults.baseURL = 'https://pixabay.com/api/';
 
@@ -11,14 +11,14 @@ const refs = {
   loadMore: document.querySelector('.load-more'),
 };
 
-// const lightBox = new SimpleLightbox('.photo-card a', {
-//   captions: true,
-//   captionType: 'attr',
-//   captionPosition: 'bottom',
-//   captionDelay: 250,
-//   captionsData: 'alt',
-//   docClose: true,
-// });
+const lightBox = new SimpleLightbox('.gallery a', {
+  captions: true,
+  captionType: 'attr',
+  captionPosition: 'bottom',
+  captionDelay: 250,
+  captionsData: 'alt',
+  docClose: true,
+});
 
 let value = '';
 let currentPage = 1;
@@ -96,16 +96,16 @@ const renderList = items => {
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
-      <b>Likes: ${likes}</b>
+      <b class = "info-team-general-color">Likes: <b class  = "info-team-second-color">${likes}</b> </b>
     </p>
     <p class="info-item">
-      <b>Views: ${views}</b>
+      <b class = "info-team-general-color">Views: <b class  = "info-team-second-color">${views}</b></b>
     </p>
     <p class="info-item">
-      <b>Comments: ${comments}</b>
+      <b class = "info-team-general-color">Comments: <b class = "info-team-second-color">${comments}</b></b>
     </p>
     <p class="info-item">
-      <b>Downloads: ${downloads}</b>
+      <b class = "info-team-general-color">Downloads: <b class  = "info-team-second-color">${downloads}</b></b>
     </p>
   </div>
 </div>`
@@ -113,6 +113,7 @@ const renderList = items => {
     .join('');
 
   refs.gallery.insertAdjacentHTML('beforeend', list);
+  lightBox.refresh();
 };
 
 refs.loadMore.addEventListener('click', onClickLoadMore);
