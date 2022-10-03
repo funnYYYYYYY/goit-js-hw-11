@@ -1,11 +1,24 @@
 import axios from 'axios';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+// import SimpleLightbox from 'simplelightbox';
+// import 'simplelightbox/dist/simple-lightbox.min.css';
+
 axios.defaults.baseURL = 'https://pixabay.com/api/';
+
 const refs = {
   form: document.querySelector('#search-form'),
   gallery: document.querySelector('.gallery'),
   loadMore: document.querySelector('.load-more'),
 };
+
+// const lightBox = new SimpleLightbox('.photo-card a', {
+//   captions: true,
+//   captionType: 'attr',
+//   captionPosition: 'bottom',
+//   captionDelay: 250,
+//   captionsData: 'alt',
+//   docClose: true,
+// });
 
 let value = '';
 let currentPage = 1;
@@ -14,6 +27,7 @@ let totalPages = 0;
 
 let items = [];
 refs.form.addEventListener('submit', onSearchItems);
+
 function onSearchItems(e) {
   e.preventDefault();
   value = e.currentTarget.elements.searchQuery.value;
@@ -26,12 +40,15 @@ function onSearchItems(e) {
   }
   currentPage = 1;
   refs.gallery.innerHTML = '';
+
   getPicture(value.trim());
 }
+
 function onClickLoadMore() {
   currentPage += 1;
   getPicture();
 }
+
 const getPicture = async () => {
   try {
     const { data } = await axios.get(
@@ -39,24 +56,24 @@ const getPicture = async () => {
     );
     items = [...items, ...data.hits];
     renderList(data.hits);
+
     if (data.totalHits === 0) {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
       );
       return;
     }
-    if (data.totalHits === data.totalHits.length - 1) {
-      Notify.failure(
-        "We're sorry, but you've reached the end of search results."
-      );
-      return;
-    }
+
     refs.loadMore.classList.add('visible');
 
     totalPages = Math.ceil(data.totalHits / 40);
 
     if (currentPage >= totalPages) {
       refs.loadMore.classList.remove('visible');
+      Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+      return;
     }
   } catch (error) {
     Notify.failure(error);
@@ -75,6 +92,7 @@ const renderList = items => {
         comments,
         downloads,
       }) => `<div class="photo-card">
+      <a class="gallery__item" href="${largeImageURL}">
   <img src="${webformatURL}" alt="${tags}" loading="lazy" />
   <div class="info">
     <p class="info-item">
@@ -93,6 +111,8 @@ const renderList = items => {
 </div>`
     )
     .join('');
+
   refs.gallery.insertAdjacentHTML('beforeend', list);
 };
+
 refs.loadMore.addEventListener('click', onClickLoadMore);
